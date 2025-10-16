@@ -1,13 +1,14 @@
 import { FormEvent, useState } from 'react';
 
-import users from '../../api/users';
 import { Todo } from '../../domain/Todo';
+import { User } from '../../domain/User';
 
 type AddTodoFormProps = {
+  users: User[];
   onSubmit: (todo: Todo) => void;
   todos: Todo[];
 };
-export const AddTodoForm = ({ onSubmit, todos }: AddTodoFormProps) => {
+export const AddTodoForm = ({ users, onSubmit, todos }: AddTodoFormProps) => {
   const [title, setTitle] = useState('');
   const [titleError, setTitleError] = useState<string | null>(null);
 
@@ -19,7 +20,7 @@ export const AddTodoForm = ({ onSubmit, todos }: AddTodoFormProps) => {
     setTitle(event.target.value.trimStart());
   };
 
-  const handUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setOwnerIdError(null);
     setOwnerId(+event.target.value);
   };
@@ -83,7 +84,11 @@ export const AddTodoForm = ({ onSubmit, todos }: AddTodoFormProps) => {
       </div>
 
       <div className="field">
-        <select data-cy="userSelect" value={ownerId} onChange={handUserChange}>
+        <select
+          data-cy="userSelect"
+          value={ownerId}
+          onChange={handleUserChange}
+        >
           <option value="0" disabled>
             Choose a user
           </option>
