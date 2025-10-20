@@ -5,10 +5,10 @@ import { User } from '../../domain/User';
 
 type AddTodoFormProps = {
   users: User[];
-  onSubmit: (todo: Todo) => void;
+  onSubmit: (todoData: { title: string; userId: number }) => void;
   todos: Todo[];
 };
-export const AddTodoForm = ({ users, onSubmit, todos }: AddTodoFormProps) => {
+export const AddTodoForm = ({ users, onSubmit }: AddTodoFormProps) => {
   const [title, setTitle] = useState('');
   const [titleError, setTitleError] = useState<string | null>(null);
 
@@ -55,23 +55,14 @@ export const AddTodoForm = ({ users, onSubmit, todos }: AddTodoFormProps) => {
       return;
     }
 
-    const newId =
-      todos.length > 0 ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
-
-    const newTodo: Todo = {
-      id: newId,
-      title: normalizedTitle,
-      completed: false,
-      userId: ownerId,
-    };
-
-    onSubmit(newTodo);
+    onSubmit({ title: normalizedTitle, userId: ownerId });
     handleResetForm();
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="field">
+        <label htmlFor="title">Title</label>
         <input
           type="text"
           data-cy="titleInput"
@@ -84,6 +75,7 @@ export const AddTodoForm = ({ users, onSubmit, todos }: AddTodoFormProps) => {
       </div>
 
       <div className="field">
+        <label htmlFor="user">User</label>
         <select
           data-cy="userSelect"
           value={ownerId}
